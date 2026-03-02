@@ -18,9 +18,10 @@ export async function GET(request: NextRequest) {
 
     const data = await response.text();
     return new Response(data, {
-      status: response.status,
+      status: response.status, 
       headers: {
         "Content-Type": response.headers.get("Content-Type") || "text/plain",
+        'Subscription-Userinfo': response.headers.get('Subscription-Userinfo') || '',
       },
     });
   } catch (error: any) {
@@ -50,6 +51,7 @@ export async function POST(request: NextRequest) {
       status: response.status,
       headers: {
         "Content-Type": response.headers.get("Content-Type") || "text/plain",
+        'Subscription-Userinfo': response.headers.get('Subscription-Userinfo') || '',
       },
     });
   } catch (error: any) {
