@@ -16,11 +16,55 @@ import {
 } from "lucide-react";
 
 const SAMPLE_URL = "https://example.com/clash.yaml";
-const SAMPLE_HEADERS = '{\n  "User-Agent": "Clash/1.0",\n  "X-Subscription-Token": "demo-token"\n}';
+const HEADER_PRESETS = [
+  {
+    key: "clash-meta",
+    label: "clash.meta",
+    headers: {
+      "User-Agent": "clash.meta",
+    },
+  },
+  {
+    key: "mihomo",
+    label: "mihomo",
+    headers: {
+      "User-Agent": "mihomo",
+    },
+  },
+  {
+    key: "clash-verge-rev",
+    label: "Clash Verge Rev",
+    headers: {
+      "User-Agent": "Clash-Verge/v2.3.1",
+    },
+  },
+  {
+    key: "clash-for-windows",
+    label: "Clash for Windows",
+    headers: {
+      "User-Agent": "Clash for Windows",
+    },
+  },
+  {
+    key: "stash",
+    label: "Stash (iOS)",
+    headers: {
+      "User-Agent": "Stash iOS",
+    },
+  },
+  {
+    key: "nekobox",
+    label: "NekoBox",
+    headers: {
+      "User-Agent": "NekoBox/Android",
+    },
+  },
+] as const;
 
 export default function Home() {
   const [url, setUrl] = useState("");
   const [headers, setHeaders] = useState("");
+  const [headerPreset, setHeaderPreset] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -50,8 +94,16 @@ export default function Home() {
   const resultStats = useMemo(() => {
     const chars = result.length;
     const lines = result ? result.split("\n").length : 0;
-    return { chars, lines };
+    const bytes = new TextEncoder().encode(result).length;
+    return { chars, lines, bytes };
   }, [result]);
+
+  const formattedResultSize = useMemo(() => {
+    const bytes = resultStats.bytes;
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  }, [resultStats.bytes]);
 
   const proxyLink = useMemo(() => {
     if (!isValidUrl || typeof window === "undefined") return "";
@@ -137,8 +189,8 @@ export default function Home() {
       <div className="pointer-events-none absolute -left-28 top-0 h-72 w-72 rounded-full bg-sky-300/40 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 top-8 h-64 w-64 rounded-full bg-teal-300/35 blur-3xl" />
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-[1320px] flex-col gap-4 lg:flex-row lg:gap-5">
-        <section className="w-full rounded-[26px] border border-white/80 bg-white/75 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-xl lg:w-[360px] lg:flex-none lg:p-6">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-[1320px] flex-col gap-4 lg:flex-row lg:items-start lg:gap-5">
+        <section className="w-full rounded-[26px] border border-white/80 bg-white/75 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-xl lg:fixed lg:left-[max(1.5rem,calc(50%-660px))] lg:top-6 lg:h-[calc(100vh-3rem)] lg:w-[360px] lg:flex-none lg:overflow-auto lg:self-start lg:p-6">
           <div className="mb-5">
             <p className="inline-flex items-center gap-2 rounded-full bg-white/85 px-3 py-1 text-[11px] font-semibold tracking-[0.15em] text-slate-600">
               <Sparkles size={13} />
@@ -173,6 +225,35 @@ export default function Home() {
 
           <div className="mt-3 space-y-2">
             <label className="block text-sm font-semibold text-slate-800">请求头 JSON（可选）</label>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]">
+              <select
+                value={headerPreset}
+                onChange={(e) => {
+                  const nextPreset = e.target.value;
+                  setHeaderPreset(nextPreset);
+                  const preset = HEADER_PRESETS.find((item) => item.key === nextPreset);
+                  setHeaders(preset ? JSON.stringify(preset.headers, null, 2) : "");
+                }}
+                className="h-10 rounded-xl border border-slate-300/80 bg-white px-3 text-sm text-slate-900 outline-none transition focus:shadow-[0_0_0_4px_rgba(16,185,129,0.18)]"
+              >
+                <option value="">选择 Header 预设</option>
+                {HEADER_PRESETS.map((preset) => (
+                  <option key={preset.key} value={preset.key}>
+                    {preset.label}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={() => {
+                  setHeaderPreset("");
+                  setHeaders("");
+                }}
+                className="inline-flex h-10 items-center justify-center rounded-xl border border-slate-300/80 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400"
+              >
+                清空
+              </button>
+            </div>
             <textarea
               value={headers}
               onChange={(e) => setHeaders(e.target.value)}
@@ -213,7 +294,7 @@ export default function Home() {
           )}
         </section>
 
-        <section className="flex min-h-[420px] flex-1 flex-col overflow-hidden rounded-[26px] border border-slate-800/50 bg-gradient-to-b from-slate-950 to-slate-900 p-4 shadow-[0_24px_72px_rgba(2,6,23,0.38)] md:p-5">
+        <section className="flex min-h-[420px] flex-1 flex-col overflow-hidden rounded-[26px] border border-slate-800/50 bg-gradient-to-b from-slate-950 to-slate-900 p-4 shadow-[0_24px_72px_rgba(2,6,23,0.38)] md:p-5 lg:ml-[380px] lg:h-[calc(100vh-3rem)] lg:overflow-auto custom-scrollbar">
           <div className="mb-3 flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-2">
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
@@ -224,6 +305,7 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <span className="rounded-full border border-white/10 bg-slate-900 px-2.5 py-1 text-xs text-slate-300">{resultStats.lines} 行</span>
               <span className="rounded-full border border-white/10 bg-slate-900 px-2.5 py-1 text-xs text-slate-300">{resultStats.chars} 字符</span>
+              <span className="rounded-full border border-white/10 bg-slate-900 px-2.5 py-1 text-xs text-slate-300">{formattedResultSize}</span>
               {result && (
                 <button
                   type="button"
@@ -239,7 +321,7 @@ export default function Home() {
 
           <div className="min-h-0 flex-1">
             {result ? (
-              <pre className="h-full overflow-auto rounded-2xl border border-white/10 bg-slate-900/90 p-4 font-mono text-xs leading-6 text-emerald-300">
+              <pre className="min-h-[350px] rounded-2xl border border-white/10 bg-slate-900/90 p-4 font-mono text-xs leading-6 text-emerald-300 whitespace-pre-wrap break-all">
                 {result}
               </pre>
             ) : (
