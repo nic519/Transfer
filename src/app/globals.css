@@ -3,25 +3,39 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --bg-top: #eaf5ff;
+  --bg-mid: #f8fbff;
+  --bg-bottom: #fffaf3;
+  --text-main: #0f172a;
+  --font-sans: "Avenir Next", "Source Sans 3", "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "JetBrains Mono", "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  margin: 0;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at 12% -6%, #c7e5ff 0%, transparent 34%),
+    radial-gradient(circle at 88% 0%, #d5f7f0 0%, transparent 28%),
+    linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 55%, var(--bg-bottom) 100%);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background: #0f172a;
+  color: #f8fafc;
 }

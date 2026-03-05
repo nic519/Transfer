@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "Clash Proxy",
-  description: "A proxy service for Clash subscription links",
+  title: "Clash Proxy Console",
+  description: "Professional proxy service console for Clash subscription links",
 };
 
 export default function RootLayout({
@@ -16,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
