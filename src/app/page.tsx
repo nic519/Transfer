@@ -10,6 +10,8 @@ import {
   Keyboard,
   Link2,
   Loader2,
+  ShieldCheck,
+  Sparkles,
   TerminalSquare,
 } from "lucide-react";
 
@@ -110,121 +112,125 @@ export default function Home() {
         void handleTest();
       }
     };
+
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [loading, url, headers, isValidUrl]);
+  }, [loading]);
 
   const copyToClipboard = async (text: string, type: "result" | "link") => {
-    await navigator.clipboard.writeText(text);
-    if (type === "result") {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } else {
-      setCopiedLink(true);
-      setTimeout(() => setCopiedLink(false), 1500);
+    try {
+      await navigator.clipboard.writeText(text);
+      if (type === "result") {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1400);
+      } else {
+        setCopiedLink(true);
+        setTimeout(() => setCopiedLink(false), 1400);
+      }
+    } catch {
+      setError("复制失败，请检查浏览器权限");
     }
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden px-4 py-5 text-slate-900 md:px-6">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_8%_-8%,rgba(59,130,246,0.24),transparent_30%),radial-gradient(circle_at_95%_0%,rgba(45,212,191,0.16),transparent_24%),linear-gradient(180deg,#edf6ff_0%,#f4f8fc_100%)]" />
+    <main className="relative min-h-screen overflow-hidden px-4 py-5 md:px-6 md:py-6">
+      <div className="pointer-events-none absolute -left-28 top-0 h-72 w-72 rounded-full bg-sky-300/40 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 top-8 h-64 w-64 rounded-full bg-teal-300/35 blur-3xl" />
 
-      <div className="mx-auto grid h-[calc(100vh-3.2rem)] w-full max-w-7xl grid-cols-[420px_1fr] gap-5">
-        <section className="flex min-h-0 flex-col overflow-auto rounded-[26px] bg-white/80 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur">
-          <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-[22px] font-semibold tracking-tight">Clash 订阅测试</h1>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-xs text-slate-500">
-              <Keyboard className="h-3.5 w-3.5" /> Cmd/Ctrl + Enter
-            </div>
-          </div>
-
-          <div className="mb-5 grid grid-cols-2 gap-2">
-            <button
-              onClick={() => setUrl(SAMPLE_URL)}
-              className="h-9 rounded-xl bg-slate-100 text-xs font-medium text-slate-700 transition hover:bg-slate-200"
-            >
-              示例链接
-            </button>
-            <button
-              onClick={() => setHeaders(SAMPLE_HEADERS)}
-              className="h-9 rounded-xl bg-slate-100 text-xs font-medium text-slate-700 transition hover:bg-slate-200"
-            >
-              示例请求头
-            </button>
-          </div>
-
-          <div className="space-y-5">
-            <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">目标链接</label>
-              <div
-                className={`flex h-12 items-center rounded-2xl bg-slate-100 px-3 transition focus-within:bg-white focus-within:ring-2 ${
-                  url && !isValidUrl ? "focus-within:ring-red-200" : "focus-within:ring-cyan-200"
-                }`}
-              >
-                <Link2 className="mr-2 h-4 w-4 text-slate-400" />
-                <input
-                  type="text"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://example.com/clash.yaml"
-                  className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
-                />
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-[1320px] flex-col gap-4 lg:flex-row lg:gap-5">
+        <section className="w-full rounded-[26px] border border-white/80 bg-white/75 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-xl lg:w-[360px] lg:flex-none lg:p-6">
+          <div className="mb-5">
+            <p className="inline-flex items-center gap-2 rounded-full bg-white/85 px-3 py-1 text-[11px] font-semibold tracking-[0.15em] text-slate-600">
+              <Sparkles size={13} />
+              TRANSFER LAB
+            </p>
+            <div className="mt-3 flex items-center justify-between gap-2">
+              <h1 className="text-[20px] font-semibold leading-none tracking-[-0.03em] text-slate-900">Clash Console</h1>
+              <div className="hidden items-center gap-1.5 rounded-xl bg-slate-900 px-2.5 py-1.5 text-[11px] font-medium text-slate-100 lg:inline-flex">
+                <Keyboard size={12} />
+                Cmd/Ctrl + Enter
               </div>
             </div>
+          </div>
 
-            <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">请求头 JSON（可选）</label>
-              <textarea
-                value={headers}
-                onChange={(e) => setHeaders(e.target.value)}
-                placeholder='{"User-Agent": "Clash/1.0"}'
-                className={`h-40 w-full resize-none rounded-2xl bg-slate-100 px-3 py-3 font-mono text-sm outline-none transition focus:bg-white focus:ring-2 ${
-                  headersValid ? "focus:ring-cyan-200" : "focus:ring-red-200"
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-slate-800">目标链接</label>
+            <div
+              className={`flex h-11 items-center gap-2 rounded-xl border bg-white px-3 transition focus-within:shadow-[0_0_0_4px_rgba(14,165,233,0.2)] ${url && !isValidUrl ? "border-red-400" : "border-slate-300/80"
                 }`}
+            >
+              <Link2 size={17} className="text-slate-500" />
+              <input
+                type="text"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://example.com/clash.yaml"
+                className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
               />
             </div>
+            {url && !isValidUrl && <p className="text-xs text-red-600">请输入合法的 http/https 地址</p>}
+          </div>
 
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={handleTest}
-                disabled={loading || !isValidUrl || !headersValid}
-                className="inline-flex h-11 items-center justify-center gap-1.5 rounded-xl bg-slate-900 px-3 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-400"
-              >
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <TerminalSquare className="h-4 w-4" />}
-                {loading ? "请求中" : "开始测试"}
-                {!loading && <ArrowRight className="h-4 w-4" />}
-              </button>
-              <button
-                disabled={!proxyLink}
-                onClick={() => proxyLink && copyToClipboard(proxyLink, "link")}
-                className="inline-flex h-11 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                {copiedLink ? <Check className="h-4 w-4 text-emerald-600" /> : <ExternalLink className="h-4 w-4" />}
-                {copiedLink ? "已复制" : "复制链接"}
-              </button>
-            </div>
+          <div className="mt-3 space-y-2">
+            <label className="block text-sm font-semibold text-slate-800">请求头 JSON（可选）</label>
+            <textarea
+              value={headers}
+              onChange={(e) => setHeaders(e.target.value)}
+              placeholder='{"User-Agent": "Clash/1.0"}'
+              className={`h-36 w-full resize-none rounded-xl border bg-white px-3 py-2.5 font-mono text-[13px] leading-6 text-slate-900 outline-none transition focus:shadow-[0_0_0_4px_rgba(16,185,129,0.18)] ${headersValid ? "border-slate-300/80" : "border-red-400"
+                }`}
+            />
+            {!headersValid && <p className="text-xs text-red-600">JSON 格式无效，请检查引号与逗号</p>}
+          </div>
+
+          <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-1">
+            <button
+              type="button"
+              onClick={handleTest}
+              disabled={loading || !isValidUrl || !headersValid}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-slate-900 px-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+            >
+              {loading ? <Loader2 size={16} className="animate-spin" /> : <TerminalSquare size={16} />}
+              {loading ? "请求中" : "开始测试"}
+              {!loading && <ArrowRight size={16} />}
+            </button>
+            <button
+              type="button"
+              disabled={!proxyLink}
+              onClick={() => proxyLink && copyToClipboard(proxyLink, "link")}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-300/80 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              {copiedLink ? <Check size={16} className="text-emerald-600" /> : <ExternalLink size={16} />}
+              {copiedLink ? "链接已复制" : "复制代理链接"}
+            </button>
           </div>
 
           {error && (
-            <div className="mt-5 flex items-start gap-2 rounded-2xl bg-red-50 px-3 py-2.5 text-sm text-red-700">
-              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+            <div className="mt-4 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              <AlertTriangle size={16} className="mt-0.5 shrink-0" />
               <span>{error}</span>
             </div>
           )}
         </section>
 
-        <section className="flex min-h-0 flex-col overflow-hidden rounded-[26px] bg-slate-950 p-6 text-slate-100 shadow-[0_20px_60px_rgba(2,6,23,0.35)]">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-sm font-semibold tracking-[0.14em] text-slate-300">结果预览</h2>
+        <section className="flex min-h-[420px] flex-1 flex-col overflow-hidden rounded-[26px] border border-slate-800/50 bg-gradient-to-b from-slate-950 to-slate-900 p-4 shadow-[0_24px_72px_rgba(2,6,23,0.38)] md:p-5">
+          <div className="mb-3 flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-2">
             <div className="flex items-center gap-2">
-              <span className="rounded-full bg-slate-900 px-2.5 py-1 text-xs text-slate-400">{resultStats.lines} 行</span>
-              <span className="rounded-full bg-slate-900 px-2.5 py-1 text-xs text-slate-400">{resultStats.chars} 字符</span>
+              <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
+              <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
+              <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+              <p className="ml-2 text-xs font-semibold tracking-[0.16em] text-slate-300">LIVE RESPONSE</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="rounded-full border border-white/10 bg-slate-900 px-2.5 py-1 text-xs text-slate-300">{resultStats.lines} 行</span>
+              <span className="rounded-full border border-white/10 bg-slate-900 px-2.5 py-1 text-xs text-slate-300">{resultStats.chars} 字符</span>
               {result && (
                 <button
+                  type="button"
                   onClick={() => copyToClipboard(result, "result")}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-3 py-1 text-xs font-medium text-slate-200 transition hover:bg-slate-800"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-900 px-2.5 py-1 text-xs font-medium text-slate-200 transition hover:bg-slate-800"
                 >
-                  {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copied ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
                   {copied ? "已复制" : "复制内容"}
                 </button>
               )}
@@ -233,15 +239,14 @@ export default function Home() {
 
           <div className="min-h-0 flex-1">
             {result ? (
-              <pre className="h-full overflow-auto rounded-2xl bg-slate-900/92 p-4 font-mono text-xs leading-6 text-emerald-300">
+              <pre className="h-full overflow-auto rounded-2xl border border-white/10 bg-slate-900/90 p-4 font-mono text-xs leading-6 text-emerald-300">
                 {result}
               </pre>
             ) : (
-              <div className="flex h-full min-h-[380px] items-center justify-center rounded-2xl bg-slate-900/80 text-center">
-                <div>
-                  <TerminalSquare className="mx-auto mb-3 h-8 w-8 text-slate-500" />
-                  <p className="text-sm text-slate-300">还没有结果，点击左侧“开始测试”</p>
-                </div>
+              <div className="flex h-full min-h-[350px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-white/15 bg-slate-900/70 text-center text-slate-300">
+                <TerminalSquare size={30} className="text-slate-500" />
+                <p className="text-sm">还没有结果，点击左侧“开始测试”</p>
+                <p className="text-xs text-slate-500">请求返回内容会实时展示在这里</p>
               </div>
             )}
           </div>

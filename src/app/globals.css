@@ -1,14 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
-  --bg-top: #eaf5ff;
-  --bg-mid: #f8fbff;
-  --bg-bottom: #fffaf3;
-  --text-main: #0f172a;
-  --font-sans: "Avenir Next", "Source Sans 3", "IBM Plex Sans", "Segoe UI", sans-serif;
-  --font-mono: "IBM Plex Mono", "JetBrains Mono", "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --font-sans: "SF Pro Display", "Avenir Next", "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", "IBM Plex Mono", Menlo, Monaco, Consolas, monospace;
 }
 
 * {
@@ -22,13 +16,12 @@ body {
 
 body {
   margin: 0;
-  color: var(--text-main);
-  background:
-    radial-gradient(circle at 12% -6%, #c7e5ff 0%, transparent 34%),
-    radial-gradient(circle at 88% 0%, #d5f7f0 0%, transparent 28%),
-    linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 55%, var(--bg-bottom) 100%);
   font-family: var(--font-sans);
-  font-feature-settings: "cv11", "ss01";
+  color: #0f172a;
+  background:
+    radial-gradient(circle at 10% -8%, #dbeafe 0%, transparent 30%),
+    radial-gradient(circle at 92% 0%, #ccfbf1 0%, transparent 28%),
+    linear-gradient(180deg, #eff4fa 0%, #e9edf3 100%);
 }
 
 .font-mono {
