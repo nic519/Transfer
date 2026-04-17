@@ -1,52 +1,63 @@
-# Web Relay Platform Design
+# Web Relay 平台改版设计文档
 
-## Goal
+## 一、目标
 
-Reposition the project from a Clash subscription relay tool into a professional web relay platform for forwarding requests through edge-hosted deployments such as Cloudflare and Vercel. The product should support two clear usage modes:
+本次改版的目标，是将项目从“Clash 订阅中转工具”重新定位为一个更专业、通用的网址代理平台。它的核心价值不再是服务特定客户端，而是借助 Cloudflare、Vercel 等边缘部署平台，对目标网址发起转发请求，并为用户提供两类能力：
 
-- Manual testing through a polished browser console
-- Stable programmatic access through a documented proxy API
+- 在浏览器内进行可视化、可操作的手动代理测试
+- 作为标准化 API 入口，供其他程序或脚本稳定调用
 
-The redesign should remove subscription-specific branding, examples, and assumptions while keeping the product lightweight and deployable as a single Next.js application.
+本次设计需要彻底移除订阅链接、Clash 客户端、节点兼容等误导性表达，同时保留项目轻量、易部署、单应用运行的特点。
 
-## Product Direction
+## 二、产品定位
 
-The platform will present itself as a web relay console rather than a niche utility. The homepage should communicate that the application can forward requests to target URLs, inspect responses, and serve as a reusable endpoint for other tools or programs.
+平台整体将以“Web Relay / Web Proxy Platform”的产品形态呈现，而不是某种特定场景下的临时中转页。
 
-The experience will explicitly support two invocation styles:
+首页需要明确传达以下信息：
 
-- `POST /api/proxy` as the recommended, structured interface for integrations
-- `GET /api/proxy?url=...` as a low-friction shortcut for direct access and simple scripts
+- 这是一个可以代理访问目标网址的服务
+- 它既适合人工调试，也适合外部程序接入
+- 它提供两种调用模式，但以结构化 `POST` 接口为主
 
-The UI should reflect this hierarchy. The interactive console is the main workspace, while the API guide explains the dual-mode access model and emphasizes POST as the standard approach.
+平台将明确支持两种调用方式：
 
-## Homepage Information Architecture
+- `POST /api/proxy`：推荐的标准接口，适合程序接入和后续扩展
+- `GET /api/proxy?url=...`：快捷入口，适合简单脚本、直接访问和临时拼接
 
-The homepage will be rebuilt as a platform-style layout with two major columns on desktop and a stacked flow on mobile.
+在界面表达上，需要体现“POST 是标准能力，GET 是快捷兼容能力”这一主次关系。
 
-### Main Console Area
+## 三、首页信息架构
 
-This is the primary workspace for manual testing. It should include:
+首页将重构为更接近“平台控制台”的结构。在桌面端采用双栏布局，在移动端改为纵向堆叠。
 
-- Product identity and positioning copy centered on web relay / proxy access
-- A request form with fields for target URL, HTTP method, optional headers JSON, and optional request body
-- A clear primary action to execute the request
-- A response panel showing status, response headers summary, payload preview, and lightweight size metadata
+### 1. 主控制台区域
 
-The request form should feel like an API console instead of a single-purpose URL passthrough input. This gives the page a more professional and flexible tone.
+这是页面的核心工作区，用于手动发起代理请求和查看结果。应包含以下内容：
 
-### Developer Access Area
+- 平台品牌名称与一句专业定位文案
+- 请求配置表单，包括目标 URL、HTTP Method、可选请求头 JSON、可选请求体
+- 发起请求的主按钮
+- 响应结果区域，展示状态码、响应头摘要、响应内容预览和简单的体积信息
 
-This section documents the two API modes and helps third-party callers choose the right one.
+这一部分的整体感觉应更接近 API Console，而不是“输入一个链接然后取文本”的小工具。
 
-- Quick Access: `GET /api/proxy?url=...`
-- Standard API: `POST /api/proxy`
+### 2. 开发者接入区域
 
-The POST section should show a structured JSON example with fields such as `url`, `method`, `headers`, and optional `body`. The copy should clearly recommend POST for stable integrations because it is easier to validate, evolve, and extend.
+该区域用于说明两种 API 调用方式，并帮助调用方理解应该如何接入。
 
-### Local History Area
+- Quick Access：`GET /api/proxy?url=...`
+- Standard API：`POST /api/proxy`
 
-The console will include a recent requests module backed by browser local storage. Each item stores:
+其中，`POST` 区块需要展示更标准的 JSON 请求示例，字段包括 `url`、`method`、`headers`，并预留 `body` 等扩展位。文案上明确说明：
+
+- `POST` 更适合正式接入
+- `GET` 适合快速调用和轻量场景
+
+### 3. 本地历史记录区域
+
+控制台应包含“最近请求”模块，数据仅保存在浏览器本地缓存中，不上传服务端。
+
+每条历史记录至少包含以下字段：
 
 - `url`
 - `method`
@@ -54,61 +65,61 @@ The console will include a recent requests module backed by browser local storag
 - `body`
 - `timestamp`
 
-Users can click a history item to repopulate the form. A clear-history action removes all local entries. History is not synced to the server.
+用户可以点击某一条历史记录，将其一键回填到表单中。页面还应提供清空历史功能。
 
-## Interaction Design
+## 四、交互设计
 
-### Request History Behavior
+### 1. 历史记录行为
 
-History should optimize for practical reuse without becoming cluttered.
+历史记录的目标是提升复用效率，而不是变成复杂管理系统，因此行为应尽量轻量、明确。
 
-- Persist entries in `localStorage`
-- Keep the most recent 12 entries
-- De-duplicate by normalized `url + method + headers + body`
-- On repeat use, move the entry to the top and refresh its timestamp
-- Show human-readable relative or formatted time in the history list
+- 使用 `localStorage` 持久化存储
+- 默认保留最近 12 条记录
+- 按 `url + method + headers + body` 组合去重
+- 当相同请求再次执行时，只更新时间并移动到列表顶部
+- 列表中展示可读的时间信息
 
-### Form Behavior
+### 2. 表单行为
 
-- Validate that URL is present and uses `http` or `https`
-- Validate that headers are valid JSON when provided
-- Only require body input for methods where a body is meaningful, but do not hard-block advanced usage
-- Keep keyboard submission support for fast testing
-- Allow one-click refill from history
+- 校验 URL 是否存在，且协议必须为 `http` 或 `https`
+- 当填写了请求头时，校验其是否为合法 JSON
+- 对请求体输入进行友好支持，但不要过度限制高级用法
+- 保留快捷键提交能力，提升测试效率
+- 支持从历史记录一键回填
 
-### Response Behavior
+### 3. 响应展示行为
 
-The response panel should behave like a relay inspection view rather than a raw text dump.
+响应区应被设计为“代理结果查看面板”，而不是单纯的文本输出框。
 
-- Show HTTP status
-- Show relevant upstream response headers in a compact summary
-- Show text payload preview
-- Preserve copy actions for response content and generated shortcut link when applicable
-- Provide clear error messaging for validation failures, upstream failures, and proxy execution failures
+- 展示 HTTP 状态码
+- 展示关键响应头摘要
+- 展示文本响应内容预览
+- 保留复制响应结果、复制快捷代理链接等操作
+- 对输入错误、上游错误、代理执行失败提供清晰的错误提示
 
-## API Design
+## 五、API 设计
 
-## `GET /api/proxy`
+### 1. `GET /api/proxy`
 
-Purpose: shortcut mode for direct browser access and very simple scripts.
+用途：作为快捷代理入口，适合浏览器直接访问、非常简单的脚本调用或临时拼接。
 
-Input:
+输入要求：
 
-- Query parameter `url` is required
+- 必须提供查询参数 `url`
 
-Behavior:
+行为定义：
 
-- Forward a GET request to the target URL
-- Return upstream body with upstream status code
-- Forward a safe subset of useful response headers where practical
+- 对目标地址发起 `GET` 请求
+- 返回上游响应体与上游状态码
+- 在合理范围内透传有价值的响应头
 
-Limitations should be implied in docs rather than overemphasized in the UI. GET remains available, but it is not the recommended primary integration path.
+在产品表达上，不需要把它描述成“低级接口”或“受限接口”，但要明确它不是平台推荐的主接入方式。
 
-## `POST /api/proxy`
+### 2. `POST /api/proxy`
 
-Purpose: standard integration mode.
+用途：作为标准代理接口，供外部程序、服务或脚本稳定接入。
 
-Request body:
+请求体示例：
 
 ```json
 {
@@ -122,35 +133,36 @@ Request body:
 }
 ```
 
-Required fields:
-
-- `url`
-
-Supported fields for this iteration:
+本期必须支持的字段：
 
 - `url`
 - `method`
 - `headers`
 - `body`
 
-Reserved extension fields:
+其中：
+
+- `url` 为必填项
+- `method`、`headers`、`body` 为可选项，但前端和接口都应支持
+
+为后续扩展预留但本期不强制实现的字段：
 
 - `responseType`
 - `timeout`
 
-Behavior:
+行为定义：
 
-- Forward the specified method to the target URL
-- Pass through caller-provided headers except forbidden or host-specific headers that should remain platform-controlled
-- Include a request body when provided and method semantics allow it
-- Return upstream body with upstream status code
-- Return a normalized JSON error envelope on failures that occur before a usable upstream response is obtained
+- 按请求体中指定的 `method` 向目标地址发起请求
+- 透传调用方自定义请求头，但应排除不适合由外部控制的头部
+- 当方法语义允许时，可携带请求体
+- 成功时返回上游响应体与上游状态码
+- 当代理在拿到上游响应前就失败时，返回统一结构的 JSON 错误对象
 
-## Error Handling
+## 六、错误处理
 
-Validation and execution errors should be structured consistently for programmatic callers.
+为了让第三方程序更容易处理失败情况，校验错误与代理执行错误应尽量采用统一结构。
 
-Suggested error shape:
+建议错误结构如下：
 
 ```json
 {
@@ -160,59 +172,59 @@ Suggested error shape:
 }
 ```
 
-Error categories:
+错误分类建议如下：
 
-- Invalid client input: `400`
-- Unsupported request configuration: `400`
-- Upstream/network failure before response: `502`
-- Unexpected server failure: `500`
+- 客户端输入不合法：`400`
+- 请求配置不支持：`400`
+- 代理访问上游失败且未拿到上游响应：`502`
+- 服务端内部异常：`500`
 
-If an upstream response is successfully received, the proxy should generally return that upstream status and body instead of wrapping it.
+如果已经拿到了上游响应，则优先直接返回上游状态码和响应体，而不是一律再包一层 JSON。
 
-## Technical Changes
+## 七、技术改动范围
 
-### Frontend
+### 1. 前端
 
-- Replace Clash branding, labels, presets, and examples
-- Remove client presets tied to Clash ecosystem user agents
-- Introduce method selection and optional body input
-- Add history persistence via `localStorage`
-- Update metadata and explanatory copy to match platform positioning
+- 去除 Clash、订阅、客户端预设等旧定位文案
+- 去掉与 Clash 生态强绑定的请求头预设
+- 引入 `method` 选择器与可选 `body` 输入区域
+- 新增基于 `localStorage` 的历史记录能力
+- 更新页面 metadata 与说明文案，使其与平台定位一致
 
-### Backend
+### 2. 后端
 
-- Remove subscription-specific default headers and assumptions
-- Expand POST handler to support configurable methods and optional body
-- Keep GET handler as shortcut mode with cleaner generic behavior
-- Normalize validation and failure responses
-- Forward a safe subset of upstream headers instead of subscription-specific ones
+- 移除带有订阅语义的默认请求头和接口假设
+- 扩展 `POST` 处理逻辑，支持可配置请求方法和可选请求体
+- 保留 `GET` 快捷入口，但改成更通用的代理行为
+- 统一输入校验与错误返回格式
+- 从“订阅专用响应头透传”改为“更通用的安全响应头透传”
 
-## Testing Strategy
+## 八、测试策略
 
-Testing should focus on the proxy contract and the new local UX behavior.
+本次测试重点应围绕“代理契约是否清晰”和“本地交互是否顺畅”。
 
-- Manual verification of GET and POST proxy flows against known public endpoints
-- Validation checks for malformed URL and malformed headers JSON
-- Verification that history persists, deduplicates, refills, and clears correctly
-- Verification that UI remains usable on desktop and mobile layouts
-- Regression check that response preview and copy actions still work
+- 手动验证 `GET` 与 `POST` 两类代理流程
+- 验证非法 URL、非法 Header JSON 等输入场景
+- 验证历史记录的保存、去重、回填、清空逻辑
+- 验证桌面端与移动端的基本可用性
+- 回归检查响应结果展示和复制操作是否正常
 
-## Out of Scope
+## 九、本期不包含的内容
 
-The following are intentionally excluded from this iteration:
+以下内容不纳入本次改版范围：
 
-- Authentication or API keys
-- Rate limiting or per-user quotas
-- Cloud sync of request history
-- Binary/file upload oriented proxy flows
-- Full response-type negotiation UI beyond lightweight reserved API fields
+- 鉴权或 API Key 体系
+- 速率限制与配额控制
+- 历史记录云同步
+- 面向文件上传或二进制转发的高级代理能力
+- 完整的响应类型协商与复杂调试参数面板
 
-## Success Criteria
+## 十、成功标准
 
-The redesign is successful when:
+当满足以下条件时，可以认为本次改版达成目标：
 
-- The product no longer reads as a Clash subscription utility
-- The homepage clearly supports both manual testing and third-party integration
-- The POST API is positioned as the standard interface
-- Local request history is fast and reliable
-- The proxy behavior is more generic, professional, and extensible than the current implementation
+- 产品不再呈现为 Clash 订阅中转工具
+- 首页同时清晰支持手动测试与程序接入两种场景
+- `POST /api/proxy` 被明确塑造成标准主接口
+- 本地历史记录功能稳定、易用、可复用
+- 代理接口整体行为比当前实现更通用、更专业、更具扩展性
