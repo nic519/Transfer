@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Transfer Console",
-  description: "High-fidelity proxy testing console for Clash subscription links",
+  title: "Web Relay Platform",
+  description: "Professional edge-hosted web relay console and proxy API.",
 };
 
 export default function RootLayout({

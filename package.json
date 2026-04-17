@@ -1,12 +1,13 @@
 {
-    "name": "clash-proxy",
+    "name": "web-relay-platform",
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "next dev",
+        "dev": "next dev -p 3600",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "test": "bun test"
     },
     "dependencies": {
         "@tailwindcss/postcss": "^4.2.1",

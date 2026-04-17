@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --font-sans: "SF Pro Display", "Avenir Next", "Segoe UI", sans-serif;
-  --font-mono: "SF Mono", "IBM Plex Mono", Menlo, Monaco, Consolas, monospace;
+  --font-sans: "Suisse Intl", "Avenir Next", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "SF Mono", Menlo, Monaco, Consolas, monospace;
 }
 
 * {
@@ -17,11 +17,11 @@ body {
 body {
   margin: 0;
   font-family: var(--font-sans);
-  color: #0f172a;
+  color: #e2e8f0;
   background:
-    radial-gradient(circle at 10% -8%, #dbeafe 0%, transparent 30%),
-    radial-gradient(circle at 92% 0%, #ccfbf1 0%, transparent 28%),
-    linear-gradient(180deg, #eff4fa 0%, #e9edf3 100%);
+    radial-gradient(circle at 12% 0%, rgba(34, 211, 238, 0.16) 0%, transparent 24%),
+    radial-gradient(circle at 88% 10%, rgba(14, 165, 233, 0.12) 0%, transparent 20%),
+    linear-gradient(180deg, #09111c 0%, #0d1725 48%, #0f1c2a 100%);
 }
 
 .font-mono {
