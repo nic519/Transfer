@@ -17,6 +17,7 @@ import { HistoryMethod } from "@/lib/history";
 const METHOD_OPTIONS: HistoryMethod[] = ["GET", "POST", "PUT", "PATCH", "DELETE"];
 
 type HomeConsoleProps = {
+  className?: string;
   body: string;
   copiedLink: boolean;
   error: string;
@@ -38,6 +39,7 @@ type HomeConsoleProps = {
 };
 
 export function HomeConsole({
+  className,
   body,
   copiedLink,
   error,
@@ -66,7 +68,9 @@ export function HomeConsole({
   const previewHeaders = Object.entries(payloadPreview.headers);
 
   return (
-    <section className="relative z-0 flex min-h-0 flex-col overflow-hidden rounded-[30px] border border-white/12 bg-[linear-gradient(180deg,rgba(9,14,25,0.94),rgba(7,11,19,0.98))] p-5 shadow-[0_30px_90px_rgba(0,0,0,0.35)] md:p-6 lg:h-full">
+    <section
+      className={`relative z-0 flex min-h-0 flex-col overflow-hidden rounded-[30px] border border-white/12 bg-[linear-gradient(180deg,rgba(9,14,25,0.94),rgba(7,11,19,0.98))] p-5 shadow-[0_30px_90px_rgba(0,0,0,0.35)] md:p-6 ${className ?? ""}`}
+    >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.22),transparent_55%)]" />
       <div className="pointer-events-none absolute -right-12 top-24 h-44 w-44 rounded-full bg-cyan-400/10 blur-3xl" />
 
@@ -88,7 +92,7 @@ export function HomeConsole({
           </div>
         </div>
 
-        <section className="rounded-[24px] border border-white/10 bg-white/[0.04] p-4 backdrop-blur-sm">
+        <section className="min-h-0 flex-1 overflow-auto rounded-[24px] border border-white/10 bg-white/[0.04] p-4 backdrop-blur-sm custom-scrollbar">
           <div className="grid gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(280px,0.9fr)]">
             <div className="grid gap-4">
               <div className="space-y-2">

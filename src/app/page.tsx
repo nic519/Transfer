@@ -10,6 +10,8 @@ import {
   ResponseSummary,
   createStandardPayload,
   extractErrorMessage,
+  getHomeLayoutClasses,
+  getHomePanelClassName,
   formatBytes,
   getProxyLink,
   getResponseStats,
@@ -22,6 +24,8 @@ const HISTORY_KEY = "web-relay-history";
 const SAMPLE_URL = "https://example.com/data";
 
 export default function Home() {
+  const layoutClasses = getHomeLayoutClasses();
+
   const [url, setUrl] = useState("");
   const [method, setMethod] = useState<HistoryMethod>("GET");
   const [headers, setHeaders] = useState("");
@@ -202,8 +206,8 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen px-4 py-4 md:px-6 md:py-6">
-      <div className="mx-auto grid min-h-[calc(100vh-2rem)] max-w-[1560px] grid-cols-1 gap-4 lg:grid-cols-[78px_minmax(0,1.2fr)_minmax(0,1fr)] lg:items-stretch lg:gap-5">
+    <main className={layoutClasses.main}>
+      <div className={layoutClasses.grid}>
         <HomeRail
           activePanel={activePanel}
           history={history}
@@ -215,6 +219,7 @@ export default function Home() {
         />
 
         <HomeConsole
+          className={getHomePanelClassName("console")}
           body={body}
           copiedLink={copiedLink}
           error={error}
@@ -236,6 +241,7 @@ export default function Home() {
         />
 
         <HomeResponse
+          className={getHomePanelClassName("response")}
           copiedResponse={copiedResponse}
           formattedResultSize={formattedResultSize}
           resultLines={resultStats.lines}

@@ -112,3 +112,18 @@ export function extractErrorMessage(payload: string) {
     return null;
   }
 }
+
+export function getHomeLayoutClasses() {
+  return {
+    main: "min-h-screen overflow-hidden px-4 py-4 md:px-6 md:py-6",
+    grid:
+      "mx-auto grid min-h-[calc(100vh-2rem)] max-w-[1560px] grid-cols-1 gap-4 lg:grid-cols-[78px_minmax(0,1.2fr)_minmax(0,1fr)] lg:items-stretch lg:gap-5",
+  };
+}
+
+export function getHomePanelClassName(_panel: "console" | "response") {
+  if (_panel === "response") {
+    return "max-h-[calc(100vh-2.4rem)] lg:min-h-0";
+  }
+  return "lg:max-h-[calc(100vh-2rem)] lg:min-h-0";
+}

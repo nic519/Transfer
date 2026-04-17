@@ -2,6 +2,7 @@ import { Check, Copy, Radar, ReceiptText, Waypoints } from "lucide-react";
 import { ResponseSummary, truncate } from "@/lib/home";
 
 type HomeResponseProps = {
+  className?: string;
   copiedResponse: boolean;
   formattedResultSize: string;
   resultLines: number;
@@ -10,6 +11,7 @@ type HomeResponseProps = {
 };
 
 export function HomeResponse({
+  className,
   copiedResponse,
   formattedResultSize,
   resultLines,
@@ -17,7 +19,9 @@ export function HomeResponse({
   onCopyResponse,
 }: HomeResponseProps) {
   return (
-    <section className="relative z-0 flex min-h-0 flex-col overflow-hidden rounded-[30px] border border-slate-900/80 bg-[linear-gradient(180deg,#f4f7fb_0%,#eef3f7_100%)] p-5 shadow-[0_30px_90px_rgba(15,23,42,0.12)] md:p-6 lg:max-h-[calc(100vh-3rem)]">
+    <section
+      className={`relative z-0 flex min-h-0 flex-col overflow-hidden rounded-[30px] border border-slate-900/12 bg-[linear-gradient(180deg,#f4f7fb_0%,#eef3f7_100%)] p-5 shadow-[0_24px_72px_rgba(15,23,42,0.10)] md:p-6 ${className ?? ""}`}
+    >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-52 bg-[radial-gradient(circle_at_top,rgba(14,165,233,0.16),transparent_60%)]" />
 
       <div className="relative flex min-h-0 flex-1 flex-col gap-5">

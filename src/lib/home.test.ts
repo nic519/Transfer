@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test";
 import {
   createStandardPayload,
   extractErrorMessage,
+  getHomeLayoutClasses,
+  getHomePanelClassName,
   getProxyLink,
   getResponseStats,
   isHeadersJsonValid,
@@ -83,5 +85,26 @@ describe("extractErrorMessage", () => {
 
   test("returns null for non json payloads", () => {
     expect(extractErrorMessage("<html>bad gateway</html>")).toBeNull();
+  });
+});
+
+describe("getHomeLayoutClasses", () => {
+  test("locks the desktop layout to the viewport height", () => {
+    expect(getHomeLayoutClasses()).toEqual({
+      main: "min-h-screen overflow-hidden px-4 py-4 md:px-6 md:py-6",
+      grid:
+        "mx-auto grid min-h-[calc(100vh-2rem)] max-w-[1560px] grid-cols-1 gap-4 lg:grid-cols-[78px_minmax(0,1.2fr)_minmax(0,1fr)] lg:items-stretch lg:gap-5",
+    });
+  });
+});
+
+describe("getHomePanelClassName", () => {
+  test("uses equal-height viewport constrained panels on desktop", () => {
+    expect(getHomePanelClassName("console")).toContain("lg:min-h-0");
+    expect(getHomePanelClassName("console")).toContain("lg:h-[calc(100vh-2rem)]");
+    expect(getHomePanelClassName("console")).toContain("lg:max-h-[calc(100vh-2rem)]");
+    expect(getHomePanelClassName("response")).toContain("lg:min-h-0");
+    expect(getHomePanelClassName("response")).toContain("lg:h-[calc(100vh-2rem)]");
+    expect(getHomePanelClassName("response")).toContain("lg:max-h-[calc(100vh-2rem)]");
   });
 });
