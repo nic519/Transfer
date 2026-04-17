@@ -13,7 +13,6 @@ import {
   Waypoints,
 } from "lucide-react";
 import { HistoryMethod } from "@/lib/history";
-import { formatBytes } from "@/lib/home";
 
 const METHOD_OPTIONS: HistoryMethod[] = ["GET", "POST", "PUT", "PATCH", "DELETE"];
 
@@ -21,15 +20,12 @@ type HomeConsoleProps = {
   body: string;
   copiedLink: boolean;
   error: string;
-  formattedResultSize: string;
   headers: string;
   headersValid: boolean;
   isValidUrl: boolean;
   loading: boolean;
   method: HistoryMethod;
   proxyLink: string;
-  resultLines: number;
-  responseStatus: number | null;
   standardPayload: string;
   url: string;
   sampleUrl: string;
@@ -45,15 +41,12 @@ export function HomeConsole({
   body,
   copiedLink,
   error,
-  formattedResultSize,
   headers,
   headersValid,
   isValidUrl,
   loading,
   method,
   proxyLink,
-  resultLines,
-  responseStatus,
   standardPayload,
   url,
   sampleUrl,
@@ -197,12 +190,6 @@ export function HomeConsole({
                 </pre>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
-                <Metric label="Status" value={responseStatus ? String(responseStatus) : "--"} />
-                <Metric label="Lines" value={String(resultLines)} />
-                <Metric label="Size" value={formattedResultSize || formatBytes(0)} />
-              </div>
-
               <div className="rounded-[22px] border border-white/10 bg-slate-950/45 p-4">
                 <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-slate-400">
                   <ExternalLink size={13} />
@@ -217,23 +204,5 @@ export function HomeConsole({
         </section>
       </div>
     </section>
-  );
-}
-
-function Metric({ label, value }: { label: string; value: string }) {
-  const icons = {
-    Status: <Globe size={15} className="text-cyan-200" />,
-    Lines: <ReceiptText size={15} className="text-cyan-200" />,
-    Size: <Waypoints size={15} className="text-cyan-200" />,
-  };
-
-  return (
-    <div className="rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-3">
-      <p className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-slate-400">
-        {icons[label as keyof typeof icons]}
-        {label}
-      </p>
-      <p className="mt-2 text-lg font-semibold text-white">{value}</p>
-    </div>
   );
 }

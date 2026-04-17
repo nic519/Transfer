@@ -218,15 +218,12 @@ export default function Home() {
           body={body}
           copiedLink={copiedLink}
           error={error}
-          formattedResultSize={formattedResultSize}
           headers={headers}
           headersValid={headersValid}
           isValidUrl={isValidUrl}
           loading={loading}
           method={method}
           proxyLink={proxyLink}
-          responseStatus={response.status}
-          resultLines={resultStats.lines}
           sampleUrl={SAMPLE_URL}
           standardPayload={standardPayload}
           url={url}
@@ -240,6 +237,8 @@ export default function Home() {
 
         <HomeResponse
           copiedResponse={copiedResponse}
+          formattedResultSize={formattedResultSize}
+          resultLines={resultStats.lines}
           response={response}
           onCopyResponse={() => void copyToClipboard(response.body, "response")}
         />
