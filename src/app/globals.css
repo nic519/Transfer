@@ -56,3 +56,36 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, rgba(186, 230, 253, 0.95), rgba(125, 211, 252, 0.95));
 }
+
+.field-scrollbar {
+  appearance: none;
+  -webkit-appearance: none;
+  color-scheme: dark;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(103, 232, 249, 0.55) rgba(8, 15, 28, 0.42);
+  scrollbar-gutter: stable;
+}
+
+.field-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.field-scrollbar::-webkit-scrollbar-track {
+  background: rgba(8, 15, 28, 0.42);
+  border-radius: 999px;
+}
+
+.field-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(56, 189, 248, 0.75), rgba(14, 165, 233, 0.82));
+  border-radius: 999px;
+  border: 2px solid rgba(8, 15, 28, 0.42);
+}
+
+.field-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(103, 232, 249, 0.92), rgba(34, 211, 238, 0.95));
+}
+
+.field-scrollbar::-webkit-scrollbar-corner {
+  background: rgba(8, 15, 28, 0.42);
+}
