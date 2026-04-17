@@ -52,13 +52,26 @@ describe("buildProxyRequestInit", () => {
     });
   });
 
-  test("does not add the default user-agent when headers are explicitly provided", () => {
+  test("adds the default user-agent when headers are an empty object", () => {
     const result = buildProxyRequestInit({
       method: "GET",
       headers: {},
     });
 
-    expect(result.headers).toEqual({});
+    expect(result.headers).toEqual({
+      "user-agent": "mihomo.party/v1.9.4 (clash.meta)",
+    });
+  });
+
+  test("does not add the default user-agent when headers include values", () => {
+    const result = buildProxyRequestInit({
+      method: "GET",
+      headers: { Authorization: "Bearer token" },
+    });
+
+    expect(result.headers).toEqual({
+      authorization: "Bearer token",
+    });
   });
 });
 

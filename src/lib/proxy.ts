@@ -73,7 +73,7 @@ export function sanitizeRequestHeaders(headers?: HeadersInit): Record<string, st
     nextHeaders.delete(blockedHeader);
   }
 
-  if (headers === undefined) {
+  if (nextHeaders.entries().next().done) {
     nextHeaders.set("user-agent", DEFAULT_USER_AGENT);
   }
 
