@@ -41,6 +41,25 @@ describe("buildProxyRequestInit", () => {
     expect(result.method).toBe("GET");
     expect(result.body).toBeUndefined();
   });
+
+  test("adds the default user-agent when headers are not provided at all", () => {
+    const result = buildProxyRequestInit({
+      method: "GET",
+    });
+
+    expect(result.headers).toEqual({
+      "user-agent": "mihomo.party/v1.9.4 (clash.meta)",
+    });
+  });
+
+  test("does not add the default user-agent when headers are explicitly provided", () => {
+    const result = buildProxyRequestInit({
+      method: "GET",
+      headers: {},
+    });
+
+    expect(result.headers).toEqual({});
+  });
 });
 
 describe("filterResponseHeaders", () => {

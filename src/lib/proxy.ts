@@ -1,5 +1,6 @@
 const ALLOWED_METHODS = new Set(["GET", "POST", "PUT", "PATCH", "DELETE"]);
 const BODY_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
+const DEFAULT_USER_AGENT = "mihomo.party/v1.9.4 (clash.meta)";
 const SAFE_RESPONSE_HEADERS = [
   "cache-control",
   "content-language",
@@ -70,6 +71,10 @@ export function sanitizeRequestHeaders(headers?: HeadersInit): Record<string, st
 
   for (const blockedHeader of blockedHeaders) {
     nextHeaders.delete(blockedHeader);
+  }
+
+  if (headers === undefined) {
+    nextHeaders.set("user-agent", DEFAULT_USER_AGENT);
   }
 
   return Object.fromEntries(nextHeaders.entries());
