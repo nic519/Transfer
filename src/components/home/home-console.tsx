@@ -100,9 +100,8 @@ export function HomeConsole({
                   value={url}
                   onChange={(event) => onUrlChange(event.target.value)}
                   placeholder={sampleUrl}
-                  className={`h-12 w-full rounded-2xl border bg-slate-950/60 px-4 text-sm text-white outline-none transition placeholder:text-slate-500 ${
-                    url && !isValidUrl ? "border-rose-400/80" : "border-white/10 focus:border-cyan-300/70"
-                  }`}
+                  className={`h-12 w-full rounded-2xl border bg-slate-950/60 px-4 text-sm text-white outline-none transition placeholder:text-slate-500 ${url && !isValidUrl ? "border-rose-400/80" : "border-white/10 focus:border-cyan-300/70"
+                    }`}
                 />
                 {url && !isValidUrl ? <p className="text-xs text-rose-300">请输入合法的 http / https 地址</p> : null}
               </div>
@@ -126,15 +125,7 @@ export function HomeConsole({
                   </select>
                 </div>
 
-                <div className="rounded-[22px] border border-white/10 bg-slate-950/50 px-4 py-3">
-                  <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-slate-400">
-                    <Orbit size={13} />
-                    Default Mode
-                  </p>
-                  <p className="mt-2 text-sm text-slate-200">
-                    控制台默认走 <span className="font-semibold text-white">POST /api/proxy</span>。需要直接访问时，再复制 GET 快捷入口。
-                  </p>
-                </div>
+
               </div>
 
               <div className="space-y-2">
@@ -146,9 +137,8 @@ export function HomeConsole({
                   value={headers}
                   onChange={(event) => onHeadersChange(event.target.value)}
                   placeholder={`{\n  "Authorization": "Bearer token"\n}`}
-                  className={`h-40 w-full resize-none rounded-[22px] border bg-slate-950/60 px-4 py-3 font-mono text-[13px] leading-6 text-slate-100 outline-none transition placeholder:text-slate-500 ${
-                    headersValid ? "border-white/10 focus:border-cyan-300/70" : "border-rose-400/80"
-                  }`}
+                  className={`h-40 w-full resize-none rounded-[22px] border bg-slate-950/60 px-4 py-3 font-mono text-[13px] leading-6 text-slate-100 outline-none transition placeholder:text-slate-500 ${headersValid ? "border-white/10 focus:border-cyan-300/70" : "border-rose-400/80"
+                    }`}
                 />
                 {!headersValid ? <p className="text-xs text-rose-300">请求头必须是合法 JSON 对象</p> : null}
               </div>

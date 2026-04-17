@@ -36,26 +36,24 @@ export function HomeResponse({ copiedResponse, response, onCopyResponse }: HomeR
           ) : null}
         </div>
 
-        <div className="rounded-[24px] border border-slate-900/10 bg-white/80 p-4">
-          <div className="flex flex-wrap gap-2">
-            {Object.entries(response.headers).length > 0 ? (
-              Object.entries(response.headers).map(([key, value]) => (
-                <span
-                  key={key}
-                  className="rounded-full border border-slate-900/10 bg-slate-950 px-3 py-1 text-[11px] text-slate-200"
-                >
-                  {key}: {truncate(value, 48)}
-                </span>
-              ))
-            ) : (
-              <span className="text-xs text-slate-500">执行请求后，这里会显示响应头摘要。</span>
-            )}
-          </div>
-
-          <pre className="mt-4 min-h-[70vh] overflow-auto whitespace-pre-wrap break-all rounded-[18px] border border-slate-900/10 bg-slate-950 px-4 py-4 font-mono text-[12px] leading-6 text-cyan-100 custom-scrollbar">
-            {response.body || "执行一次代理请求后，目标网址的响应内容会显示在这里。"}
-          </pre>
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(response.headers).length > 0 ? (
+            Object.entries(response.headers).map(([key, value]) => (
+              <span
+                key={key}
+                className="rounded-full border border-slate-900/10 bg-slate-950 px-3 py-1 text-[11px] text-slate-200"
+              >
+                {key}: {truncate(value, 48)}
+              </span>
+            ))
+          ) : (
+            <span className="text-xs text-slate-500">执行请求后，这里会显示响应头摘要。</span>
+          )}
         </div>
+
+        <pre className="min-h-[70vh] overflow-auto whitespace-pre-wrap break-all rounded-[22px] border border-slate-900/10 bg-slate-950 px-4 py-4 font-mono text-[12px] leading-6 text-cyan-100 custom-scrollbar">
+          {response.body || "执行一次代理请求后，目标网址的响应内容会显示在这里。"}
+        </pre>
       </div>
     </section>
   );
