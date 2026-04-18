@@ -88,6 +88,25 @@ describe("filterResponseHeaders", () => {
       "content-type": "application/json",
     });
   });
+
+  test("passes through non-hop-by-hop upstream headers", () => {
+    const headers = new Headers({
+      "content-type": "text/yaml; charset=utf-8",
+      "subscription-userinfo": "upload=1; download=2; total=3; expire=4",
+      "content-disposition": 'attachment; filename="profile.yaml"',
+      "profile-update-interval": "24",
+      connection: "keep-alive",
+      "transfer-encoding": "chunked",
+      "set-cookie": "unsafe=true",
+    });
+
+    expect(filterResponseHeaders(headers)).toEqual({
+      "content-type": "text/yaml; charset=utf-8",
+      "subscription-userinfo": "upload=1; download=2; total=3; expire=4",
+      "content-disposition": 'attachment; filename="profile.yaml"',
+      "profile-update-interval": "24",
+    });
+  });
 });
 
 describe("createErrorPayload", () => {
