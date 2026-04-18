@@ -85,11 +85,6 @@ export function HomeConsole({
               通过边缘网络，稳定访问目标网址
             </h1>
           </div>
-
-          <div className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-200">
-            <Keyboard size={14} />
-            Cmd / Ctrl + Enter
-          </div>
         </div>
 
         <section className="min-h-0 flex-1 overflow-auto rounded-[24px] border border-white/10 bg-white/[0.04] p-4 backdrop-blur-sm custom-scrollbar">
@@ -167,16 +162,22 @@ export function HomeConsole({
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  onClick={onExecute}
-                  disabled={loading || !isValidUrl || !headersValid}
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-cyan-300 px-5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200 disabled:cursor-not-allowed disabled:bg-slate-600 disabled:text-slate-300"
-                >
-                  {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-                  {loading ? "Relay Running" : "Execute Relay"}
-                  {!loading ? <ArrowRight size={16} /> : null}
-                </button>
+                <div className="flex flex-col items-start gap-2">
+                  <button
+                    type="button"
+                    onClick={onExecute}
+                    disabled={loading || !isValidUrl || !headersValid}
+                    className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-cyan-300 px-5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200 disabled:cursor-not-allowed disabled:bg-slate-600 disabled:text-slate-300"
+                  >
+                    {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                    {loading ? "Relay Running" : "Execute Relay"}
+                    {!loading ? <ArrowRight size={16} /> : null}
+                  </button>
+                  <p className="inline-flex items-center gap-2 mt-1 pl-2 text-xs text-slate-400">
+                    <Keyboard size={13} />
+                    Cmd / Ctrl + Enter
+                  </p>
+                </div>
               </div>
 
               {error ? (
